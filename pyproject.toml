@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "oc_p10_restapi"
+version = "0.1.0"
+description = ""
+authors = ["Clement MARCEL <clmtmarcel@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+djangorestframework = "^3.14.0"
+Markdown = "^3.4.1"
+django-filter = "^22.1"
+
+[tool.poetry.dev-dependencies]
+black = {version = "^22.10.0", allow-prereleases = true}
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
