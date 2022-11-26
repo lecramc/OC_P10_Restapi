@@ -1,6 +1,6 @@
 from rest_framework import permissions
 
-from projects.models import Project, Comment, Issue, Contributor
+from projects.models import Issue, Contributor
 
 
 class ProjectPermission(permissions.BasePermission):
@@ -25,7 +25,6 @@ class IssuePermission(permissions.BasePermission):
 
 class CommentPermission(permissions.BasePermission):
     def has_permission(self, request, view):
-        project = Project.objects.get(pk=view.kwargs["project_id"])
         issue = Issue.objects.get(pk=view.kwargs["issue_id"])
         if request.method in ["POST", "GET"]:
             contributor = Contributor.objects.filter(project=view.kwargs["project_id"])
