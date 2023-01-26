@@ -10,17 +10,19 @@ class ProjectPermission(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method in ["PATCH", "PUT", "DELETE"]:
             return request.user == obj.author
+        return True
 
 
 class IssuePermission(permissions.BasePermission):
     def has_permission(self, request, view):
         contributor = Contributor.objects.filter(project=view.kwargs["project_id"])
-        contributors_ids = [c.pk for c in contributor]
+        contributors_ids = [c.user for c in contributor]
         return request.user in contributors_ids
 
     def has_object_permission(self, request, view, obj):
         if request.method in ["PATCH", "PUT", "DELETE"]:
             return request.user == obj.author
+        return True
 
 
 class CommentPermission(permissions.BasePermission):
@@ -28,13 +30,13 @@ class CommentPermission(permissions.BasePermission):
         issue = Issue.objects.get(pk=view.kwargs["issue_id"])
         if request.method in ["POST", "GET"]:
             contributor = Contributor.objects.filter(project=view.kwargs["project_id"])
-            contributors_ids = [c.pk for c in contributor]
+            contributors_ids = [c.user for c in contributor]
             return request.user in contributors_ids
         elif request.method in ["PUT", "DELETE", "PATCH"]:
             author = Contributor.objects.filter(
                 project=view.kwargs["project_id"], permissions="all"
             )
-            author_ids = [a.pk for a in author]
+            author_ids = [a.user for a in author]
             return request.user in author_ids or request.user == issue.author
 
 
@@ -43,5 +45,5 @@ class ContributorPermission(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
         authors = Contributor.objects.filter(project=view.kwargs["project_id"])
-        author_ids = [a.pk for a in authors]
+        author_ids = [a.user for a in authors]
         return request.user in author_ids

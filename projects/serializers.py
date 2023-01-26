@@ -17,20 +17,10 @@ class ContributorSerializer(ModelSerializer):
 class IssueSerializer(ModelSerializer):
     class Meta:
         model = Issue
-        fields = [
-            "id",
-            "title",
-            "desc",
-            "tag",
-            "priority",
-            "project_id",
-            "status",
-            "author",
-            "assignee_user",
-        ]
+        fields = "__all__"
 
 
 class CommentSerializer(ModelSerializer):
     class Meta:
         model = Comment
-        fields = ["description"]
+        fields = "__all__"

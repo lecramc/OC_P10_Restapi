@@ -24,7 +24,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
         return Project.objects.all()
 
     def perform_create(self, serializer):
-        new_project = serializer.save()
+        new_project = serializer.save(author=self.request.user)
         Contributor.objects.create(
             user=self.request.user, project=new_project, permissions="all"
         )
@@ -38,6 +38,10 @@ class ContributorViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         project = get_object_or_404(Project, pk=self.kwargs["project_id"])
         return Contributor.objects.filter(project=project)
+
+    def perform_create(self, serializer):
+        project = get_object_or_404(Project, pk=self.kwargs["project_id"])
+        serializer.save(project=project)
 
 
 class IssueViewSet(viewsets.ModelViewSet):
