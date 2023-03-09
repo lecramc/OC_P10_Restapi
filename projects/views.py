@@ -21,14 +21,16 @@ class ProjectViewSet(viewsets.ModelViewSet):
     permission_classes = [ProjectPermission]
 
     def get_queryset(self):
-        return Project.objects.all()
+        contributors = Contributor.objects.filter(user=self.request.user)
+        all_projects = [i.project.pk for i in contributors]
+        return Project.objects.filter(pk__in=all_projects)
 
     def perform_create(self, serializer):
         new_project = serializer.save(author=self.request.user)
         Contributor.objects.create(
             user=self.request.user, project=new_project, permissions="all"
         )
-        new_project.save()
+
 
 
 class ContributorViewSet(viewsets.ModelViewSet):
